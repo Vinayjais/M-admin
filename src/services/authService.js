@@ -1,8 +1,9 @@
-import api from './api';
-import { AUTH_ENDPOINTS } from '../constants/apiEndpoints';
+import api from "./api";
+import { AUTH_ENDPOINTS } from "../constants/apiEndpoints";
 
 export const authService = {
   login: (email, password) => {
+    console.log("Attempting login with email:", email);
     return api.post(AUTH_ENDPOINTS.LOGIN, { email, password });
   },
 

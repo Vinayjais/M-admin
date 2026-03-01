@@ -1,62 +1,63 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { getTokenFromStorage, removeTokenFromStorage, setTokenInStorage } from '../utils/tokenUtils';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import {
+  getTokenFromStorage,
+  removeTokenFromStorage,
+  setTokenInStorage,
+} from "../utils/tokenUtils";
+import authStore from "../services/authService";
 
 // Mock dummy users for testing
 const DUMMY_USERS = {
-  'admin@example.com': {
-    id: '1',
-    name: 'Admin User',
-    email: 'admin@example.com',
-    password: 'admin123',
-    role: 'admin',
+  "admin@example.com": {
+    id: "1",
+    name: "Admin User",
+    email: "admin@example.com",
+    password: "admin123",
+    role: "admin",
     permissions: [
-      'view_dashboard',
-      'manage_users',
-      'manage_products',
-      'manage_orders',
-      'view_reports',
-      'manage_settings',
+      "view_dashboard",
+      "manage_users",
+      "manage_products",
+      "manage_orders",
+      "view_reports",
+      "manage_settings",
     ],
   },
-  'manager@example.com': {
-    id: '2',
-    name: 'Manager User',
-    email: 'manager@example.com',
-    password: 'manager123',
-    role: 'manager',
+  "manager@example.com": {
+    id: "2",
+    name: "Manager User",
+    email: "manager@example.com",
+    password: "manager123",
+    role: "manager",
     permissions: [
-      'view_dashboard',
-      'manage_users',
-      'manage_products',
-      'manage_orders',
+      "view_dashboard",
+      "manage_users",
+      "manage_products",
+      "manage_orders",
     ],
   },
-  'staff@example.com': {
-    id: '3',
-    name: 'Staff User',
-    email: 'staff@example.com',
-    password: 'staff123',
-    role: 'staff',
-    permissions: [
-      'view_dashboard',
-      'manage_orders',
-      'view_reports',
-    ],
+  "staff@example.com": {
+    id: "3",
+    name: "Staff User",
+    email: "staff@example.com",
+    password: "staff123",
+    role: "staff",
+    permissions: ["view_dashboard", "manage_orders", "view_reports"],
   },
-  'viewer@example.com': {
-    id: '4',
-    name: 'Viewer User',
-    email: 'viewer@example.com',
-    password: 'viewer123',
-    role: 'viewer',
-    permissions: ['view_dashboard'],
+  "viewer@example.com": {
+    id: "4",
+    name: "Viewer User",
+    email: "viewer@example.com",
+    password: "viewer123",
+    role: "viewer",
+    permissions: ["view_dashboard"],
   },
 };
 
 // Generate mock JWT token
 const generateMockToken = (user) => {
-  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
   const payload = btoa(
     JSON.stringify({
       id: user.id,
@@ -64,9 +65,9 @@ const generateMockToken = (user) => {
       role: user.role,
       permissions: user.permissions,
       exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
-    })
+    }),
   );
-  const signature = btoa('mock-signature');
+  const signature = btoa("mock-signature");
   return `${header}.${payload}.${signature}`;
 };
 
@@ -86,32 +87,35 @@ const useAuthStore = create(
           await new Promise((resolve) => setTimeout(resolve, 500));
 
           // Check if user exists in dummy users
-          const dummyUser = DUMMY_USERS[email];
-          if (!dummyUser || dummyUser.password !== password) {
-            throw new Error('Invalid email or password');
-          }
+          // const dummyUser = DUMMY_USERS[email];
+          // if (!dummyUser || dummyUser.password !== password) {
+          //   throw new Error('Invalid email or password');
+          // }
 
           // Generate mock token
-          const token = generateMockToken(dummyUser);
-          setTokenInStorage(token);
+          // const token = generateMockToken(dummyUser);
+          // setTokenInStorage(token);
 
           // Return user data without password
-          const userData = {
-            id: dummyUser.id,
-            name: dummyUser.name,
-            email: dummyUser.email,
-            role: dummyUser.role,
-            permissions: dummyUser.permissions,
-          };
+
+          const res = await authStore.login(email, password);
+          console.log("Login response:", res.data);
+          const { token, user } = res.data;
 
           set({
-            user: userData,
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user?.role || "admin",
+              permissions: user.permissions,
+            },
             token: token,
             isAuthenticated: true,
             isLoading: false,
           });
 
-          return { token, user: userData };
+          return { token, user: user };
         } catch (error) {
           set({
             error: error.message,
@@ -129,7 +133,7 @@ const useAuthStore = create(
 
           // Check if user already exists
           if (DUMMY_USERS[userData.email]) {
-            throw new Error('User already exists');
+            throw new Error("User already exists");
           }
 
           // Create new user
@@ -138,8 +142,8 @@ const useAuthStore = create(
             name: userData.name,
             email: userData.email,
             password: userData.password,
-            role: 'staff',
-            permissions: ['view_dashboard', 'manage_orders'],
+            role: "staff",
+            permissions: ["view_dashboard", "manage_orders"],
           };
 
           DUMMY_USERS[userData.email] = newUser;
@@ -194,18 +198,20 @@ const useAuthStore = create(
 
         try {
           // Decode mock token
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          
+          const payload = JSON.parse(atob(token.split(".")[1]));
+
           // Check if token is expired
           const currentTime = Math.floor(Date.now() / 1000);
           if (payload.exp < currentTime) {
-            throw new Error('Token expired');
+            throw new Error("Token expired");
           }
 
           const user = {
             id: payload.id,
             email: payload.email,
-            name: Object.values(DUMMY_USERS).find((u) => u.email === payload.email)?.name,
+            name: Object.values(DUMMY_USERS).find(
+              (u) => u.email === payload.email,
+            )?.name,
             role: payload.role,
             permissions: payload.permissions,
           };
@@ -226,14 +232,14 @@ const useAuthStore = create(
       },
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
       partialize: (state) => ({
         token: state.token,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );
 
 export default useAuthStore;

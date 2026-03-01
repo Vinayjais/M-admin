@@ -6,6 +6,7 @@ export const useAuth = () => {
 
   const handleLogin = useCallback(
     async (email, password) => {
+      console.log("Attempting login with email:", email); 
       return login(email, password);
     },
     [login]

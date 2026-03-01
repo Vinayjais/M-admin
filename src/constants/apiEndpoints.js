@@ -1,11 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
 
 export const AUTH_ENDPOINTS = {
-  LOGIN: `${API_BASE_URL}/auth/login`,
-  REGISTER: `${API_BASE_URL}/auth/register`,
-  LOGOUT: `${API_BASE_URL}/auth/logout`,
-  ME: `${API_BASE_URL}/auth/me`,
-  REFRESH_TOKEN: `${API_BASE_URL}/auth/refresh`,
+  LOGIN: `${API_BASE_URL}/user/authentication`,
+  REGISTER: `${API_BASE_URL}/user/user_register`,
+  LOGOUT: `${API_BASE_URL}/user/logout`,
+  ME: `${API_BASE_URL}/user/me`,
+  REFRESH_TOKEN: `${API_BASE_URL}/user/refresh`,
 };
 
 export const USER_ENDPOINTS = {
@@ -36,17 +37,17 @@ export const DASHBOARD_ENDPOINTS = {
 };
 
 export const ROLES = {
-  ADMIN: 'admin',
-  MANAGER: 'manager',
-  STAFF: 'staff',
-  VIEWER: 'viewer',
+  ADMIN: "admin",
+  MANAGER: "manager",
+  STAFF: "staff",
+  VIEWER: "viewer",
 };
 
 export const PERMISSIONS = {
-  VIEW_DASHBOARD: 'view_dashboard',
-  MANAGE_USERS: 'manage_users',
-  MANAGE_PRODUCTS: 'manage_products',
-  MANAGE_ORDERS: 'manage_orders',
-  VIEW_REPORTS: 'view_reports',
-  MANAGE_SETTINGS: 'manage_settings',
+  VIEW_DASHBOARD: "view_dashboard",
+  MANAGE_USERS: "manage_users",
+  MANAGE_PRODUCTS: "manage_products",
+  MANAGE_ORDERS: "manage_orders",
+  VIEW_REPORTS: "view_reports",
+  MANAGE_SETTINGS: "manage_settings",
 };

@@ -17,6 +17,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      console.log("Submitting login form with email:", email);
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {

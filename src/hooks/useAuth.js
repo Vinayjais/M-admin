@@ -6,7 +6,7 @@ export const useAuth = () => {
 
   const handleLogin = useCallback(
     async (email, password) => {
-      console.log("Attempting login with email:", email); 
+      console.log("Attempting login with email:", email);
       return login(email, password);
     },
     [login]
@@ -15,34 +15,6 @@ export const useAuth = () => {
   const handleLogout = useCallback(() => {
     logout();
   }, [logout]);
-
-  const hasRole = useCallback(
-    (requiredRole) => {
-      return user?.role === requiredRole;
-    },
-    [user]
-  );
-
-  const hasPermission = useCallback(
-    (requiredPermission) => {
-      return user?.permissions?.includes(requiredPermission) || user?.role === 'admin';
-    },
-    [user]
-  );
-
-  const hasAnyRole = useCallback(
-    (roles = []) => {
-      return roles.includes(user?.role);
-    },
-    [user]
-  );
-
-  const hasAnyPermission = useCallback(
-    (permissions = []) => {
-      return permissions.some((perm) => user?.permissions?.includes(perm));
-    },
-    [user]
-  );
 
   return {
     user,
@@ -53,10 +25,6 @@ export const useAuth = () => {
     login: handleLogin,
     logout: handleLogout,
     setUser,
-    hasRole,
-    hasPermission,
-    hasAnyRole,
-    hasAnyPermission,
   };
 };
 

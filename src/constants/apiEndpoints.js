@@ -10,15 +10,24 @@ export const AUTH_ENDPOINTS = {
 };
 
 export const USER_ENDPOINTS = {
-  GET_ALL: `${API_BASE_URL}/users`,
+  GET_ALL: `${API_BASE_URL}/admin/users`,
   GET_ONE: (id) => `${API_BASE_URL}/users/${id}`,
   CREATE: `${API_BASE_URL}/users`,
   UPDATE: (id) => `${API_BASE_URL}/users/${id}`,
   DELETE: (id) => `${API_BASE_URL}/users/${id}`,
 };
 
+export const CATEGORY_ENDPOINTS = {
+  GET_ALL: `${API_BASE_URL}/categories`,
+  GET_ONE: (id) => `${API_BASE_URL}/categories/${id}`,
+  CREATE: `${API_BASE_URL}/categories`,
+  UPDATE: (id) => `${API_BASE_URL}/categories/${id}`,
+  DELETE: (id) => `${API_BASE_URL}/categories/${id}`,
+};
+
 export const PRODUCT_ENDPOINTS = {
   GET_ALL: `${API_BASE_URL}/products`,
+  SEARCH: `${API_BASE_URL}/products/search`,
   GET_ONE: (id) => `${API_BASE_URL}/products/${id}`,
   CREATE: `${API_BASE_URL}/products`,
   UPDATE: (id) => `${API_BASE_URL}/products/${id}`,

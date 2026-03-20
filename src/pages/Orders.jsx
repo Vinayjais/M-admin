@@ -37,11 +37,12 @@ const Orders = () => {
     }
   };
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.id?.toString().includes(filter) ||
-      order.customerName?.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredOrders = []
+  //  orders.filter(
+  //   (order) =>
+  //     order.id?.toString().includes(filter) ||
+  //     order.customerName?.toLowerCase().includes(filter.toLowerCase())
+  // );
 
   if (loading)
     return <div className="list-container">Loading...</div>;

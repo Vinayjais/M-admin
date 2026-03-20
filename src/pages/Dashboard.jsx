@@ -11,8 +11,8 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await dashboardService.getStats();
-        setStats(response.data);
+        // const response = await dashboardService.getStats();
+        // setStats(response.data);
       } catch (err) {
         setError(err.message);
       } finally {

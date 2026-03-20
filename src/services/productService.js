@@ -2,33 +2,25 @@ import api from './api';
 import { PRODUCT_ENDPOINTS } from '../constants/apiEndpoints';
 
 export const productService = {
-  getAll: (params = {}) => {
-    return api.get(PRODUCT_ENDPOINTS.GET_ALL, { params });
-  },
+  getAll: (params = {}) => api.get(PRODUCT_ENDPOINTS.GET_ALL, { params }),
 
-  getById: (id) => {
-    return api.get(PRODUCT_ENDPOINTS.GET_ONE(id));
-  },
+  search: (query) => api.get(PRODUCT_ENDPOINTS.SEARCH, { params: { q: query } }),
+
+  getById: (id) => api.get(PRODUCT_ENDPOINTS.GET_ONE(id)),
 
   create: (productData) => {
-    return api.post(PRODUCT_ENDPOINTS.CREATE, productData);
+    const form = new FormData();
+    Object.entries(productData).forEach(([key, val]) => {
+      if (val !== undefined && val !== null) form.append(key, val);
+    });
+    return api.post(PRODUCT_ENDPOINTS.CREATE, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
 
-  update: (id, productData) => {
-    return api.put(PRODUCT_ENDPOINTS.UPDATE(id), productData);
-  },
+  update: (id, productData) => api.put(PRODUCT_ENDPOINTS.UPDATE(id), productData),
 
-  delete: (id) => {
-    return api.delete(PRODUCT_ENDPOINTS.DELETE(id));
-  },
-
-  updateStatus: (id, status) => {
-    return api.patch(PRODUCT_ENDPOINTS.UPDATE(id), { status });
-  },
-
-  updatePrice: (id, price) => {
-    return api.patch(PRODUCT_ENDPOINTS.UPDATE(id), { price });
-  },
+  delete: (id) => api.delete(PRODUCT_ENDPOINTS.DELETE(id)),
 };
 
 export default productService;

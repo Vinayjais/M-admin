@@ -13,7 +13,8 @@ const Users = () => {
       try {
         setLoading(true);
         const response = await userService.getAll();
-        setUsers(response?.data || []);
+        const data = response?.data;
+        setUsers(Array.isArray(data) ? data : data?.users || data?.data || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -28,7 +29,7 @@ const Users = () => {
     if (window.confirm('Are you sure?')) {
       try {
         await userService.delete(id);
-        setUsers(users.filter((u) => u.id !== id));
+        setUsers(users.filter((u) => (u._id || u.id) !== id));
       } catch (err) {
         setError(err.message);
       }
@@ -76,33 +77,27 @@ const Users = () => {
         </thead>
         <tbody>
           {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <tr key={user.id}>
+            filteredUsers.map((user) => {
+              const id = user._id || user.id;
+              return (
+              <tr key={id}>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
                   <span className={`badge badge-${user.role}`}>{user.role}</span>
                 </td>
                 <td>
-                  <span
-                    className={`badge badge-${user.status === 'active' ? 'success' : 'danger'}`}
-                  >
-                    {user.status}
+                  <span className={`badge badge-${user.status === 'active' ? 'success' : 'danger'}`}>
+                    {user.status || '—'}
                   </span>
                 </td>
                 <td className="actions">
-                  <a href={`/users/${user.id}`} className="btn btn-sm btn-info">
-                    Edit
-                  </a>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="btn btn-sm btn-danger"
-                  >
-                    Delete
-                  </button>
+                  <a href={`/users/${id}`} className="btn btn-sm btn-info">Edit</a>
+                  <button onClick={() => handleDelete(id)} className="btn btn-sm btn-danger">Delete</button>
                 </td>
               </tr>
-            ))
+              );
+            })
           ) : (
             <tr>
               <td colSpan="5" className="empty">

@@ -15,6 +15,8 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Products from './pages/Products';
 import Orders from './pages/Orders';
+import Categories from './pages/Categories';
+import Profile from './pages/Profile';
 
 function App() {
   const { checkAuth } = useAuthStore();
@@ -31,83 +33,14 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Protected Admin Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager', 'staff']}>
-              <AdminLayout>
-                <Dashboard />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/users"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager']}>
-              <AdminLayout>
-                <Users />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/users/:id"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager']}>
-              <AdminLayout>
-                <Users />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/products"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager']}>
-              <AdminLayout>
-                <Products />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/products/:id"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager']}>
-              <AdminLayout>
-                <Products />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager', 'staff']}>
-              <AdminLayout>
-                <Orders />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/orders/:id"
-          element={
-            <ProtectedRoute requiredRoles={['admin', 'manager', 'staff']}>
-              <AdminLayout>
-                <Orders />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/dashboard" element={<ProtectedRoute><AdminLayout><Dashboard /></AdminLayout></ProtectedRoute>} />
+        <Route path="/users" element={<ProtectedRoute><AdminLayout><Users /></AdminLayout></ProtectedRoute>} />
+        <Route path="/users/:id" element={<ProtectedRoute><AdminLayout><Users /></AdminLayout></ProtectedRoute>} />
+        <Route path="/products" element={<ProtectedRoute><AdminLayout><Products /></AdminLayout></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><AdminLayout><Orders /></AdminLayout></ProtectedRoute>} />
+        <Route path="/orders/:id" element={<ProtectedRoute><AdminLayout><Orders /></AdminLayout></ProtectedRoute>} />
+        <Route path="/categories" element={<ProtectedRoute><AdminLayout><Categories /></AdminLayout></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><AdminLayout><Profile /></AdminLayout></ProtectedRoute>} />
 
         {/* Fallback */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
